@@ -1,0 +1,116 @@
+# Perintah untuk membuat Docker image dari Dockerfile yang tadi dibuat, dengan nama image item-app, dan memiliki tag v1.
+docker build -t item-app:v1 .
+        [+] Building 3.6s (11/11) FINISHED                                                                                                 docker:desktop-linux
+        => [internal] load build definition from Dockerfile                                                                                               0.0s
+        => => transferring dockerfile: 809B                                                                                                               0.0s 
+        => [internal] load metadata for docker.io/library/node:14                                                                                         0.0s 
+        => [internal] load .dockerignore                                                                                                                  0.0s 
+        => => transferring context: 89B                                                                                                                   0.0s 
+        => [1/6] FROM docker.io/library/node:14                                                                                                           0.0s 
+        => [internal] load build context                                                                                                                  0.0s 
+        => => transferring context: 3.69kB                                                                                                                0.0s 
+        => CACHED [2/6] WORKDIR /app                                                                                                                      0.0s 
+        => CACHED [3/6] COPY package*.json ./                                                                                                             0.0s 
+        => CACHED [4/6] RUN npm install --production --unsafe-perm                                                                                        0.0s 
+        => [5/6] COPY . .                                                                                                                                 0.1s 
+        => [6/6] RUN npm run build                                                                                                                        3.3s 
+        => exporting to image                                                                                                                             0.1s 
+        => => exporting layers                                                                                                                            0.0s 
+        => => writing image sha256:e1bb00c0d771c58e5893b5f17471e85319c123367bd922ba3968638d5b011409                                                       0.0s 
+        => => naming to docker.io/library/item-app:v1                                                                                                     0.0s 
+
+        View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/co5zjf7wo3qymub3n8b8watuf
+
+        What's next:
+            View a summary of image vulnerabilities and recommendations → docker scout quickview
+
+# Melihat daftar image di lokal.
+docker image ls
+        REPOSITORY   TAG         IMAGE ID       CREATED              SIZE
+        item-app     v1          e1bb00c0d771   About a minute ago   949MB
+        nginx        latest      5ef79149e0ec   7 days ago           188MB
+        ubuntu       latest      edbfe74c41f8   2 weeks ago          78.1MB
+        mysql        5.7         5107333e08a8   8 months ago         501MB
+        registry     2           cfb4d9904335   10 months ago        25.4MB
+        node         14          1d12470fa662   16 months ago        912MB
+        node         12-alpine   bb6d28039b8c   2 years ago          91MB
+        mongo        3           2f21415cb85f   3 years ago          453MB
+
+# Mengubah nama image agar sesuai dengan format Docker Hub (atau GitHub Packages bila menerapkan saran keempat).
+docker tag item-app:v1 ghcr.io/ihksans/item-app
+
+# Login ke Docker Hub (atau GitHub Packages bila menerapkan saran keempat) via Terminal. 
+# Perlu memasukan password berupa access token GitHub Packages
+docker login ghcr.io -u ihksans
+        Password:
+
+        Login Succeeded
+
+# Mengunggah image ke Docker Hub / GitHub Packages.
+docker push ghcr.io/ihksans/item-app
+        Using default tag: latest
+        The push refers to repository [ghcr.io/ihksans/item-app]
+        9340ec6319ca: Pushed
+        56eeda08f18a: Pushed
+        1b3c737ad0c7: Pushed
+        5d5b151e344d: Pushed
+        95ec8412c7d0: Pushed 
+        0d5f5a015e5d: Pushed
+        3c777d951de2: Pushed
+        f8a91dd5fc84: Pushed
+        cb81227abde5: Pushed
+        e01a454893a9: Pushed
+        c45660adde37: Pushed
+        fe0fb3ab4a0f: Pushed
+        f1186e5061f2: Pushed
+        b2dba7477754: Pushed
+        latest: digest: sha256:b352ac0dae9e944af9a13dad990ba28efaac0ac14af5e53422c42b7142b81509 size: 3263
+
+
+log service mongo(item-db)
+2024-08-22 17:18:41 2024-08-22T10:18:41.349+0000 I CONTROL  [initandlisten] MongoDB starting : pid=1 port=27017 dbpath=/data/db 64-bit host=34e8d7381369
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] db version v3.6.23
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] git version: d352e6a4764659e0d0350ce77279de3c1f243e5c
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2g  1 Mar 2016
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] allocator: tcmalloc
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] modules: none
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] build environment:
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten]     distmod: ubuntu1604
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten]     distarch: x86_64
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten]     target_arch: x86_64
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I CONTROL  [initandlisten] options: { net: { bindIpAll: true } }
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I STORAGE  [initandlisten] 
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2024-08-22 17:18:41 2024-08-22T10:18:41.354+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2024-08-22 17:18:41 2024-08-22T10:18:41.355+0000 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=3425M,cache_overflow=(file_max=0M),session_max=20000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),compatibility=(release="3.0",require_max="3.0"),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),statistics_log=(wait=0),verbose=(recovery_progress),
+2024-08-22 17:18:42 2024-08-22T10:18:42.003+0000 I STORAGE  [initandlisten] WiredTiger message [1724321922:3811][1:0x7f76061fea40], txn-recover: Set global recovery timestamp: 0
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] 
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] 
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] 
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+2024-08-22 17:18:42 2024-08-22T10:18:42.137+0000 I CONTROL  [initandlisten] 
+2024-08-22 17:18:42 2024-08-22T10:18:42.204+0000 I STORAGE  [initandlisten] createCollection: admin.system.version with provided UUID: 598b1d13-7c49-4487-92e4-36285cd758ea
+2024-08-22 17:18:42 2024-08-22T10:18:42.256+0000 I COMMAND  [initandlisten] setting featureCompatibilityVersion to 3.6
+2024-08-22 17:18:42 2024-08-22T10:18:42.272+0000 I STORAGE  [initandlisten] createCollection: local.startup_log with generated UUID: a0ed2709-b917-4c4b-bce0-0008df0163c9
+2024-08-22 17:18:42 2024-08-22T10:18:42.301+0000 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+2024-08-22 17:18:42 2024-08-22T10:18:42.301+0000 I NETWORK  [initandlisten] listening via socket bound to 0.0.0.0
+2024-08-22 17:18:42 2024-08-22T10:18:42.301+0000 I NETWORK  [initandlisten] listening via socket bound to /tmp/mongodb-27017.sock
+2024-08-22 17:18:42 2024-08-22T10:18:42.301+0000 I NETWORK  [initandlisten] waiting for connections on port 27017
+2024-08-22 17:18:42 2024-08-22T10:18:42.301+0000 I STORAGE  [LogicalSessionCacheRefresh] createCollection: config.system.sessions with generated UUID: 21b0ba42-6999-4fb9-be11-5213a1a85d51
+2024-08-22 17:18:42 2024-08-22T10:18:42.358+0000 I INDEX    [LogicalSessionCacheRefresh] build index on: config.system.sessions properties: { v: 2, key: { lastUse: 1 }, name: "lsidTTLIndex", ns: "config.system.sessions", expireAfterSeconds: 1800 }
+2024-08-22 17:18:42 2024-08-22T10:18:42.358+0000 I INDEX    [LogicalSessionCacheRefresh]         building index using bulk method; build may temporarily use up to 500 megabytes of RAM
+2024-08-22 17:18:42 2024-08-22T10:18:42.361+0000 I INDEX    [LogicalSessionCacheRefresh] build index done.  scanned 0 total records. 0 secs
+2024-08-22 17:18:43 2024-08-22T10:18:43.782+0000 I NETWORK  [listener] connection accepted from 172.18.0.3:39208 #1 (1 connection now open)
+2024-08-22 17:18:43 2024-08-22T10:18:43.787+0000 I NETWORK  [conn1] received client metadata from 172.18.0.3:39208 conn1: { driver: { name: "nodejs", version: "2.2.36" }, os: { type: "Linux", name: "linux", architecture: "x64", version: "5.15.153.1-microsoft-standard-WSL2" }, platform: "Node.js v14.21.3, LE, mongodb-core: 2.1.20" }
+2024-08-22 17:20:00 2024-08-22T10:20:00.417+0000 I STORAGE  [conn1] createCollection: accumulator.documents with generated UUID: c48f4044-15c5-41fb-b9d3-32f190ad2e8d
+
+LOGS item-app:
+2024-08-22 17:18:42 
+2024-08-22 17:18:42 > docker-software-delivery@1.0.0 start /app
+2024-08-22 17:18:42 > node ./bin/www
+2024-08-22 17:18:42 
+2024-08-22 17:18:43 NODE_ENV: production
+2024-08-22 17:18:43 Connected to database

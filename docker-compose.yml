@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  item-app:
+    # Menggunakan image item-app dari Docker Hub atau GitHub Packages.
+    # exp:  ghcr.io/<username>/item-app
+    image: ghcr.io/ihksans/item-app
+    # Melakukan port mapping agar dapat diakses dari port 80 di host.
+    ports: 
+      - 80:8080
+    # Pastikan item-app hanya berjalan setelah item-db diluncurkan.
+    depends_on:
+      - item-db
+
+  item-db:
+    image: mongo:3
+    volumes:
+      - app-db:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  app-db:
