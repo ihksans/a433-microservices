@@ -3,24 +3,24 @@ version: 2.1
 jobs:
   install_dependencies:
     docker:
-      - image: cimg/node:18.17 
+      - image: cimg/node:18.17   #pull image node dari docker hub
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install dependencies #install node
           command: npm install
 
   lint-dockerfile:
   # berisi proses untuk menginstal hadolint dan menjalankannya terhadap berkas Dockerfile.
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.8 #pull image python dari docker hub
     steps:
       - checkout
       - run:
           name: Create bin directory in the home directory
           command: mkdir -p $HOME/bin
       - run:
-          name: Install hadolint
+          name: Install hadolint #install halolint
           command: |
             curl -L https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 -o $HOME/bin/hadolint
             chmod +x $HOME/bin/hadolint
@@ -28,7 +28,7 @@ jobs:
           name: Add bin to PATH
           command: echo 'export PATH=$HOME/bin:$PATH' >> $BASH_ENV
       - run:
-          name: Lint Dockerfile
+          name: Lint Dockerfile #melakukan lint halolint pada Dockerfile
           command: hadolint Dockerfile
 
   build-app-karsajobs-ui:
@@ -39,16 +39,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Fix Script Permissions
+          name: Fix Script Permissions #check integritas scrpit permission
           command: chmod +x ./build_push_image_karsajobs.sh
       - run:
-          name: Verify Permissions
+          name: Verify Permissions #validasi/verify permission
           command: ls -la ./build_push_image_karsajobs.sh
       - run:
-          name: Run Deployment Script
+          name: Run Deployment Script #eksekusi script untuk deploy ke github packages
           command: ./build_push_image_karsajobs.sh
 
-workflows:
+workflows: #eksekusi sesuai workflow/pipeline step by step
   version: 2
   build_and_test:
     jobs:
