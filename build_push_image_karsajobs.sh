@@ -6,7 +6,6 @@ docker tag karsajobs ghcr.io/ihksans/karsajobs:latest
 
 # Login ke Docker Hub (atau GitHub Packages bila menerapkan saran keempat) via Terminal. 
 # Perlu memasukan password berupa access token GitHub Packages
-
 echo $PASSWORD_DOCKER_HUB | docker login ghcr.io -u ihksans --password-stdin
 
 # Mengunggah image ke Docker Hub / GitHub Packages.

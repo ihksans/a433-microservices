@@ -1,0 +1,65 @@
+version: 2.1
+jobs:
+  lint-dockerfile:
+  # berisi proses untuk menginstal hadolint dan menjalankannya terhadap berkas Dockerfile.
+    docker:
+      - image: circleci/python:3.8 #pull image python
+    steps:
+      - checkout
+      - run:
+          name: Create bin directory in the home directory
+          command: mkdir -p $HOME/bin
+      - run:
+          name: Install hadolint  #install halolint package
+          command: |
+            curl -L https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 -o $HOME/bin/hadolint
+            chmod +x $HOME/bin/hadolint
+      - run:
+          name: Add bin to PATH
+          command: echo 'export PATH=$HOME/bin:$PATH' >> $BASH_ENV
+      - run:
+          name: Lint Dockerfile #mengeksekusi lint pada dockerfile
+          command: hadolint Dockerfile
+
+  test-app:
+  # berisi perintah untuk menjalankan unit test untuk backend dengan perintah:
+    docker:
+      - image: cimg/go:1.20 #pull image go language
+    steps:
+      - checkout
+      - restore_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: Download Go modules
+          command: go mod download
+      - run: #menjalankan unit test
+          name: Run Unit Tests 
+          command: go test -v -short --count=1 $(go list ./...)
+
+  build-app-karsajobs:
+  # berisi perintah untuk build dan push image.
+    machine:
+      docker_layer_caching: true
+      resource_class: medium
+    steps:
+      - checkout
+      - run: #validasi script permission
+          name: Fix Script Permissions 
+          command: chmod +x ./build_push_image_karsajobs.sh
+      - run:  #verify script permission
+          name: Verify Permissions
+          command: ls -la ./build_push_image_karsajobs.sh
+      - run: #mengeksekusi script deployment ke github package
+          name: Run Deployment Script
+          command: ./build_push_image_karsajobs.sh
+
+workflows: #menjalankan semua workflows/pipeline step by step
+  build-and-test:
+    jobs:
+      - lint-dockerfile
+      - test-app:
+          requires:
+            - lint-dockerfile
+      - build-app-karsajobs:
+          requires:
+            - test-app
