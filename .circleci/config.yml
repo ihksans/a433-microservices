@@ -53,7 +53,7 @@ jobs:
           name: Run Deployment Script
           command: ./build_push_image_karsajobs.sh
 
-workflows: #menjalankan semua workflows/pipeline step by step
+workflows: #menjalankan semua workflows/pipeline step by step dan harus success
   build-and-test:
     jobs:
       - lint-dockerfile
